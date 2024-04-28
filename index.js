@@ -27,6 +27,7 @@ async function run() {
 
         const database = client.db("craftDB");
         const craftCollection = database.collection("crafts");
+        const userCollection = database.collection("user");
 
         app.get('/craftItems', async (req, res) => {
             const cursor = craftCollection.find();
@@ -37,6 +38,14 @@ async function run() {
         app.post('/craftItems', async (req, res) => {
             const newCraft = req.body;
             const result = await craftCollection.insertOne(newCraft);
+            res.send(result);
+        })
+
+        // user related apis 
+
+        app.post('/user', async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
             res.send(result);
         })
 
