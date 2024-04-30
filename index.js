@@ -75,6 +75,11 @@ async function run() {
 
         })
 
+        app.delete("/deleteCraft/:id", async (req, res) => {
+            const result = await craftCollection.deleteOne({ _id: new ObjectId(req.params.id) })
+            res.send(result);
+        })
+
 
         // user related apis 
 
