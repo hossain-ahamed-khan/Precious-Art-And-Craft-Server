@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 
@@ -41,10 +41,38 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/craftItems/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const result = await craftCollection.findOne(query);
+            res.send(result);
+        })
+
         app.post('/craftItems', async (req, res) => {
             const newCraft = req.body;
             const result = await craftCollection.insertOne(newCraft);
             res.send(result);
+        })
+
+        app.put('/CraftItems/:id', async (req, res) => {
+            const query = { _id: new ObjectId(req.params.id) };
+            const data = {
+                $set: {
+                    itemName: req.body.itemName,
+                    subcategory: req.body.subcategory,
+                    customization: req.body.customization,
+                    status: req.body.status,
+                    imageURL: req.body.imageURL,
+                    processingTime: req.body.processingTime,
+                    price: req.body.price,
+                    rating: req.body.rating,
+                    itemDescription: req.body.itemDescription
+                }
+            }
+            const result = await craftCollection.updateOne(query, data);
+            res.send(result);
+
         })
 
 
