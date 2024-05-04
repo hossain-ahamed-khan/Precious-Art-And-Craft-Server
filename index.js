@@ -30,9 +30,16 @@ async function run() {
         const database = client.db("craftDB");
         const craftCollection = database.collection("crafts");
         const userCollection = database.collection("user");
+        const subcategoryCollection = database.collection("subcategories");
 
         app.get('/craftItems', async (req, res) => {
             const cursor = craftCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/subcategories', async (req, res) => {
+            const cursor = subcategoryCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -42,6 +49,13 @@ async function run() {
             const result = await craftCollection.find({ userEmail: req.params.email }).toArray();
             res.send(result);
         })
+
+        app.get("/craftItems/subcategory/:subcategory_name", async (req, res) => {
+            console.log(req.params.subcategory_name);
+            const result = await craftCollection.find({ subcategory: req.params.subcategory_name }).toArray();
+            res.send(result);
+        })
+
 
         app.get("/craftItems/:id", async (req, res) => {
             const id = req.params.id;
